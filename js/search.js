@@ -2,10 +2,6 @@ jQuery(document).ready(function($) {
 	$('#search-button').click(function(event) {
 		event.preventDefault();
 
-
-
-		// add some information
-
 		// load api
 		gapi.client.load('youtube', 'v3').then(function() {
 			// get musics list
