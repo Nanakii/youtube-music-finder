@@ -39,7 +39,6 @@
 
 						request.execute(function(response) {
 							var youtubeMusics = response.result;
-							console.log(youtubeMusics);
 
 							var rendered = Mustache.render(template, {
 								'id': youtubeMusics.items[0].id.videoId,
