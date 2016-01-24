@@ -14,11 +14,11 @@
 	<script src="libs/prettyPhoto/js/jquery.prettyPhoto.js"></script>
 	<script src="node_modules/mustache/mustache.min.js"></script>
 
-	<script>
-		// After the API loads, call a function to enable the search box.
-		
+	<script src="js/loadApi.js"></script>
 
+	<script>
 		jQuery(document).ready(function($) {
+			
 			// Search for a specified string.
 			$('#search-button').click(function(event) {
 				event.preventDefault();
@@ -68,8 +68,7 @@
 
 		<form>
   			<div class="form-group">
-				<textarea class="form-control" rows="3" id="query" placeholder="One music title per line">Kyo l'équilibre
-Birdy Shelter</textarea><br />
+				<textarea class="form-control" rows="3" id="query" placeholder="One music title per line"></textarea><br />
 				<button type="submit" id="search-button" disabled>Search</button>
 			</div>
 		</form>
