@@ -15,48 +15,7 @@
 	<script src="node_modules/mustache/mustache.min.js"></script>
 
 	<script src="js/loadApi.js"></script>
-
-	<script>
-		jQuery(document).ready(function($) {
-			
-			// Search for a specified string.
-			$('#search-button').click(function(event) {
-				event.preventDefault();
-
-				gapi.client.load('youtube', 'v3').then(function() {
-					var query    = $('#query').val();
-					var musics   = query.trim().split(/\s*[\r\n]+\s*/g);
-
-					var template = $('#youtube-row').html();
-					Mustache.parse(template);
-
-					$.each(musics, function(index, music) {
-						var request = gapi.client.youtube.search.list({
-							type: 'video',
-							q: music,
-							part: 'snippet'
-						});
-
-						request.execute(function(response) {
-							var youtubeMusics = response.result;
-
-							var rendered = Mustache.render(template, {
-								'id': youtubeMusics.items[0].id.videoId,
-								'thumbnail': youtubeMusics.items[0].snippet.thumbnails.default.url,
-								'title': youtubeMusics.items[0].snippet.title,
-								'author': youtubeMusics.items[0].snippet.channelTitle
-							});
-
-							$('#search-container').append(rendered);
-							$("a[rel^='prettyPhoto']").prettyPhoto({social_tools: ''});
-						});
-					});
-
-				});
-			});
-			
-		});
-	</script>
+	<script src="js/search.js"></script>
 
 	<script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
 </head>
@@ -70,11 +29,19 @@
 				<textarea class="form-control" rows="3" id="query" placeholder="One music title per line"></textarea><br />
 				<button class="btn btn-default" type="submit" id="search-button" disabled>Search</button>
 			</div>
+			
+			<div id="search-loading">Loading... <span class="number"></span></div>
 		</form>
 
 		<hr />
 
-		<div id="search-container"></div>
+		<div>
+			<p>
+				<em>Note: You can click on the thumbnail to view the video in a lightbox.</em>
+			</p>
+
+			<div id="search-container"></div>
+		</div>
 	</div>
 
 	<script id="youtube-row" type="x-tmpl-mustache">
