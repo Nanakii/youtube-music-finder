@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="libs/prettyPhoto/css/prettyPhoto.css">
+	<link rel="stylesheet" href="style.css">
+
+	<script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="libs/prettyPhoto/js/jquery.prettyPhoto.js"></script>
+	<script src="node_modules/mustache/mustache.min.js"></script>
+
+	<script>
+		// After the API loads, call a function to enable the search box.
+		
+
+		jQuery(document).ready(function($) {
+			// Search for a specified string.
+			$('#search-button').click(function(event) {
+				event.preventDefault();
+
+				gapi.client.load('youtube', 'v3').then(function() {
+					var query    = $('#query').val();
+					var musics   = query.trim().split(/\s*[\r\n]+\s*/g);
+
+					var template = $('#youtube-row').html();
+					Mustache.parse(template);
+
+					$.each(musics, function(index, music) {
+						var request = gapi.client.youtube.search.list({
+							type: 'video',
+							q: music,
+							part: 'snippet'
+						});
+
+						request.execute(function(response) {
+							var youtubeMusics = response.result;
+							console.log(youtubeMusics);
+
+							var rendered = Mustache.render(template, {
+								'id': youtubeMusics.items[0].id.videoId,
+								'thumbnail': youtubeMusics.items[0].snippet.thumbnails.default.url,
+								'title': youtubeMusics.items[0].snippet.title,
+								'author': youtubeMusics.items[0].snippet.channelTitle
+							});
+
+							$('#search-container').append(rendered);
+							$("a[rel^='prettyPhoto']").prettyPhoto({social_tools: ''});
+						});
+					});
+
+				});
+			});
+			
+		});
+	</script>
+
+	<script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
+</head>
+
+<body>
+	<div class="container">
+		<h2>Youtube Finder <small>&ndash; Find your musics on Youtube</small></h2>
+
+		<form>
+  			<div class="form-group">
+				<textarea class="form-control" rows="3" id="query" placeholder="One music title per line">Kyo l'équilibre
+Birdy Shelter</textarea><br />
+				<button type="submit" id="search-button" disabled>Search</button>
+			</div>
+		</form>
+
+		<hr />
+
+		<div id="search-container"></div>
+	</div>
+
+	<script id="youtube-row" type="x-tmpl-mustache">
+		<div class="well yt-entry">
+			<p>
+				<a href="https://www.youtube.com/watch?v={{ id }}" class="video" rel="prettyPhoto">
+					<img src="{{ thumbnail }}" />
+				</a>
+
+				{{ title }}<br />
+				<em class="glyphicon glyphicon-user"></em>&nbsp; by {{ author}}<br />
+				<em class="glyphicon glyphicon-share"></em>&nbsp; <a href="https://www.youtube.com/watch?v={{ id }}" target="_blank">https://www.youtube.com/watch?v={{ id }}</a>
+			</p>
+		</div>
+	</script>
+</body>
+
+</html>

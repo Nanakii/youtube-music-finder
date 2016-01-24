@@ -1,0 +1,8 @@
+.yt-entry p {
+	height: 75px;
+}
+.yt-entry p a.video {
+	margin-right: 20px;
+	float: left;
+	display: block;
+}

@@ -1,0 +1,4 @@
+function OnLoadCallback() {
+	gapi.client.setApiKey("your_api_key");
+	$('#search-button').attr('disabled', false);
+}
