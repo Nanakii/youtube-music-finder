@@ -1,4 +1,4 @@
-Youtube Finder
+Youtube Music Finder
 =============
 
 Simple tool to find youtube musics from a list of music titles.
